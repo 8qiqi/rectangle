@@ -1,25 +1,65 @@
-$(function Rectangle(e,a){
-    var t=Number(e),
-    i=Number(a);
-    this.area=function(){
-        return t*i},
-        this.perimeter=function(){
-            return 2*(t+i)
-        }}
-        function validate(e){
-            var a={isOK:!1,reason:""
-        };
-            return""===e?a.reason="不能为空！":/^-?(0|[1-9]\d*)(\.\d*)?([eE][+-]?\d+)?$/.test(e)?Number(e)<0?a.reason="必须大于零":a.isOK=!0:a.reason="必须是数值",a}$(function(){var a=$("#width"),t=$("#height"),e=$("#calculate"),i=$("#perimeter"),r=$("#area"),n=$("#width-validate"),l=$("#height-validate"),s=!1;
-            a.focusout(function(){
-                var e=validate(a.val());
-                s=e.isOK,e.isOK?n.html(""):(n.html("宽度"+e.reason),a.select())}),
-                t.focusout(function(){
-                    var e=validate(t.val());
-                    s=e.isOK,e.isOK?l.html(""):(l.html("高度"+e.reason),t.select())}),
-                    e.click(function(){
-                        if(s){
-                            var e=new Rectangle(a.val(),
-                            t.val());
-                            i.val(e.perimeter()),
-                            r.val(e.area())
-                        }})});
+/* global rectangle:true */
+$(function(){
+  var $width = $('#width'),
+      $height = $('#height'),
+      $btnCal = $('#calculate'),
+      $perimeter = $('#perimeter'),
+      $area = $('#area'),
+      $widthValidation = $('#width-validation'),
+      $heightValidation = $('#height-validation');
+
+  $width.focusout(function(){
+    var w = $width.val();
+
+    var result = valid(w);
+    if(!result.isOk){
+      $widthValidation.html('宽度' + result.reason);
+      $width.select();
+      return;
+    }
+    $widthValidation.html('');
+  });
+
+  $height.focusout(function(){
+    var h = $height.val();
+
+    var result = valid(h);
+    if(!result.isOk){
+      $heightValidation.html('高度' + result.reason);
+      $height.select();
+      return;
+    } 
+    $heightValidation.html('');
+  });
+  $btnCal.click(function(){
+
+    var w = $width.val(),
+        h = $height.val();
+    
+    var widthResult = valid(w);
+    var heightResult = valid(h);
+    
+    if(!widthResult.isOk){
+      $widthValidation.html('宽度' + widthResult.reason);
+      $width.select();
+      return;
+    }
+
+    if(!heightResult.isOk){
+      $heightValidation.html('高度' + heightResult.reason);
+      $height.select();
+      return;
+    }
+
+    $widthValidation.html('');
+    $heightValidation.html('');
+
+    var rect = rectangle();
+    $perimeter.val(rect.perimeter(w,h));
+    $area.val(rect.area(w,h));
+  });
+
+  $btnCal.mousedown(function(e){// 当点击事件和失去焦点事件冲突的时候触发
+    e.preventDefault();
+  });
+});
