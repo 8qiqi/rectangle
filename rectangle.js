@@ -1,65 +1,60 @@
-/* global rectangle:true */
-$(function(){
-  var $width = $('#width'),
-      $height = $('#height'),
-      $btnCal = $('#calculate'),
-      $perimeter = $('#perimeter'),
-      $area = $('#area'),
-      $widthValidation = $('#width-validation'),
-      $heightValidation = $('#height-validation');
+$function(){
+  var $width=$('#width'),
+      $length=$('#length'),
+      $btnCal=$('#caculate'),
+      $area=$('#area'),
+      $perimeter=$('#perimeter'),
+      $widthValidation=$('#width-validation'),
+      $lengthValidation=$('#length-validation');
 
+  $btnCal.click(function(){
+    var w=$width.val(),l=$length.val();
+    if(l===''){
+      $lengthValidation.html('高度不能为空！');
+    }
+    if(w===''){
+      $widthValidation.html('宽度不能为空！');
+      return;
+    }
+    var rect = new rectangle($width.val(),$length.val());//eslint-disable-line no-undef
+    $area.val(rect.area());
+    $perimeter.val(rect.perimeter());
+  });
+  $length.focusout(function(){
+    var l = $length.val();
+    var result = valid(l);//eslint-disable-line no-undef
+    if(!result.isOK){
+      $lengthValidation.html('长度'+result.reason);
+      $length.select();
+    }else{
+      $lengthValidation.html('');
+    }
+     
+  });
+  $width.keypress(function(e){
+    if(/[abcdf-zABCDF-Z`~!@#$%^&*()=_+[\]{}|;:'",<>/?\\]/.test(e.key)){
+      e.preventDefault();
+    }
+    if(e.key==='.'){
+      if(e.target.value===''){
+        e.preventDefault();
+      }
+      if(e.target.value.indexOf('.')!==-1){
+        e.preventDefault();
+      }else{
+        if(e.target.selecttionStart===0) e.preventDefault();
+      }
+    } 
+  });
   $width.focusout(function(){
     var w = $width.val();
-
-    var result = valid(w);
-    if(!result.isOk){
-      $widthValidation.html('宽度' + result.reason);
+    var result = valid(w);//eslint-disable-line no-undef
+    if(!result.isOK){
+      $widthValidation.html('宽度'+result.reason);
       $width.select();
-      return;
+    }else{
+      $widthValidation.html('');
     }
-    $widthValidation.html('');
   });
 
-  $height.focusout(function(){
-    var h = $height.val();
-
-    var result = valid(h);
-    if(!result.isOk){
-      $heightValidation.html('高度' + result.reason);
-      $height.select();
-      return;
-    } 
-    $heightValidation.html('');
-  });
-  $btnCal.click(function(){
-
-    var w = $width.val(),
-        h = $height.val();
-    
-    var widthResult = valid(w);
-    var heightResult = valid(h);
-    
-    if(!widthResult.isOk){
-      $widthValidation.html('宽度' + widthResult.reason);
-      $width.select();
-      return;
-    }
-
-    if(!heightResult.isOk){
-      $heightValidation.html('高度' + heightResult.reason);
-      $height.select();
-      return;
-    }
-
-    $widthValidation.html('');
-    $heightValidation.html('');
-
-    var rect = rectangle();
-    $perimeter.val(rect.perimeter(w,h));
-    $area.val(rect.area(w,h));
-  });
-
-  $btnCal.mousedown(function(e){// 当点击事件和失去焦点事件冲突的时候触发
-    e.preventDefault();
-  });
 });
