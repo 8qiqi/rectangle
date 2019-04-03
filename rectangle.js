@@ -1,4 +1,4 @@
-$function(){
+function(){
   var $width=$('#width'),
       $length=$('#length'),
       $btnCal=$('#caculate'),
